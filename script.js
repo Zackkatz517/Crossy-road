@@ -10,6 +10,47 @@ const tilesPerRow = maxTileIndex - minTileIndex + 1;
 const tileSize = 42;
 
 /* =========================
+   PLAYER (MUST COME FIRST)
+========================= */
+function Player() {
+  const player = new THREE.Group();
+
+  const body = new THREE.Mesh(
+    new THREE.BoxGeometry(15, 15, 20),
+    new THREE.MeshLambertMaterial({ color: "white", flatShading: true })
+  );
+  body.position.z = 10;
+  body.castShadow = true;
+  body.receiveShadow = true;
+  player.add(body);
+
+  const cap = new THREE.Mesh(
+    new THREE.BoxGeometry(2, 4, 2),
+    new THREE.MeshLambertMaterial({ color: 0xf0619a, flatShading: true })
+  );
+  cap.position.z = 21;
+  cap.castShadow = true;
+  cap.receiveShadow = true;
+  player.add(cap);
+
+  const container = new THREE.Group();
+  container.add(player);
+
+  return container;
+}
+
+/* =========================
+   LIGHT
+========================= */
+function DirectionalLight() {
+  const light = new THREE.DirectionalLight();
+  light.position.set(-100, -100, 200);
+  light.up.set(0, 0, 1);
+  light.castShadow = true;
+  return light;
+}
+
+/* =========================
    CAMERA
 ========================= */
 function Camera() {
@@ -35,48 +76,10 @@ function Camera() {
 }
 
 /* =========================
-   TEXTURES
-========================= */
-function Texture(width, height, rects) {
-  const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext("2d");
-
-  ctx.fillStyle = "#fff";
-  ctx.fillRect(0, 0, width, height);
-  ctx.fillStyle = "rgba(0,0,0,0.6)";
-  rects.forEach(r => ctx.fillRect(r.x, r.y, r.w, r.h));
-
-  return new THREE.CanvasTexture(canvas);
-}
-
-const carFrontTexture = Texture(40, 80, [{ x: 0, y: 10, w: 30, h: 60 }]);
-const carBackTexture = Texture(40, 80, [{ x: 10, y: 10, w: 30, h: 60 }]);
-const carRightSideTexture = Texture(110, 40, [
-  { x: 10, y: 0, w: 50, h: 30 },
-  { x: 70, y: 0, w: 30, h: 30 },
-]);
-const carLeftSideTexture = Texture(110, 40, [
-  { x: 10, y: 10, w: 50, h: 30 },
-  { x: 70, y: 10, w: 30, h: 30 },
-]);
-
-const truckFrontTexture = Texture(30, 30, [{ x: 5, y: 0, w: 10, h: 30 }]);
-const truckRightSideTexture = Texture(25, 30, [{ x: 15, y: 5, w: 10, h: 10 }]);
-const truckLeftSideTexture = Texture(25, 30, [{ x: 15, y: 15, w: 10, h: 10 }]);
-
-/* =========================
-   CANVAS + RENDERER (FIX)
+   RENDERER
 ========================= */
 function Renderer() {
-  let canvas = document.querySelector("canvas.game");
-
-  if (!canvas) {
-    canvas = document.createElement("canvas");
-    canvas.className = "game";
-    document.body.prepend(canvas);
-  }
+  const canvas = document.querySelector("canvas.game");
 
   const renderer = new THREE.WebGLRenderer({
     canvas,
@@ -121,11 +124,26 @@ const moveClock = new THREE.Clock(false);
 const clock = new THREE.Clock();
 
 /* =========================
-   INITIALIZE GAME
+   UI
 ========================= */
 const scoreDOM = document.getElementById("score");
 const resultDOM = document.getElementById("result-container");
 const finalScoreDOM = document.getElementById("final-score");
+
+/* =========================
+   INIT GAME
+========================= */
+function initializePlayer() {
+  player.position.set(0, 0, 0);
+  position.currentRow = 0;
+  position.currentTile = 0;
+  movesQueue.length = 0;
+}
+
+function initializeMap() {
+  metadata.length = 0;
+  map.clear();
+}
 
 function initializeGame() {
   initializePlayer();
@@ -135,15 +153,12 @@ function initializeGame() {
 }
 
 /* =========================
-   START RENDER LOOP
+   ANIMATION LOOP
 ========================= */
 const renderer = Renderer();
 renderer.setAnimationLoop(animate);
 
 function animate() {
-  animateVehicles();
-  animatePlayer();
-  hitTest();
   renderer.render(scene, camera);
 }
 
