@@ -93,6 +93,41 @@ function Renderer() {
 
   return renderer;
 }
+/* =========================
+   PLAYER
+========================= */
+function Player() {
+  const group = new THREE.Group();
+
+  const body = new THREE.Mesh(
+    new THREE.BoxGeometry(15, 15, 20),
+    new THREE.MeshLambertMaterial({ color: 0xffffff, flatShading: true })
+  );
+  body.position.z = 10;
+  group.add(body);
+
+  return group;
+}
+
+/* =========================
+   LIGHT
+========================= */
+function DirectionalLight() {
+  const light = new THREE.DirectionalLight(0xffffff, 1);
+  light.position.set(-100, -100, 200);
+  light.castShadow = true;
+  return light;
+}
+
+/* =========================
+   PLACEHOLDER GAME FUNCTIONS
+   (prevents crashes)
+========================= */
+function initializePlayer() {}
+function initializeMap() {}
+function animateVehicles() {}
+function animatePlayer() {}
+function hitTest() {}
 
 /* =========================
    SCENE SETUP
