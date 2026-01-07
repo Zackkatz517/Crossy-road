@@ -1,24 +1,114 @@
-<canvas class="game"></canvas>
-<div id="controls">
-  <div>
-    <button id="forward">▲</button>
-    <button id="left">◀</button>
-    <button id="backward">▼</button>
-    <button id="right">▶</button>
-  </div>
-</div>
-<div id="score">0</div>
-<div id="result-container">
-  <div id="result">
-    <h1>Game Over</h1>
-    <p>Your score: <span id="final-score"></span></p>
-    <button id="retry">Retry</button>
-  </div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crossy Road</title>
 
-<a id="youtube" target="_top" href="https://youtu.be/vNr3_hQ3Bws">
-  
-</a>
-<div id="youtube-card">
+  <style>
+    /* Reset */
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: sans-serif;
+      background: #ffffff;
+    }
 
-</div>
+    /* THREE.JS CANVAS */
+    canvas.game {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      z-index: 0;
+    }
+
+    /* CONTROLS */
+    #controls {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 10;
+    }
+
+    #controls button {
+      font-size: 18px;
+      margin: 2px;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+
+    /* SCORE */
+    #score {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      z-index: 10;
+    }
+
+    /* GAME OVER OVERLAY */
+    #result-container {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.85);
+      z-index: 20;
+      visibility: hidden;
+    }
+
+    #result {
+      text-align: center;
+    }
+
+    #result button {
+      padding: 8px 16px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    /* OPTIONAL YOUTUBE LINK */
+    #youtube, #youtube-card {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- THREE.JS RENDER TARGET -->
+  <canvas class="game"></canvas>
+
+  <!-- CONTROLS -->
+  <div id="controls">
+    <div>
+      <button id="forward">▲</button><br />
+      <button id="left">◀</button>
+      <button id="backward">▼</button>
+      <button id="right">▶</button>
+    </div>
+  </div>
+
+  <!-- SCORE -->
+  <div id="score">0</div>
+
+  <!-- GAME OVER -->
+  <div id="result-container">
+    <div id="result">
+      <h1>Game Over</h1>
+      <p>Your score: <span id="final-score">0</span></p>
+      <button id="retry">Retry</button>
+    </div>
+  </div>
+
+  <!-- SCRIPT -->
+  <script type="module" src="./script.js"></script>
+
+</body>
+</html>
